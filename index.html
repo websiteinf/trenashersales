@@ -268,7 +268,10 @@
             return 'text-red-600';
         }
 
-        function handleChoice(option) {
+        function handleChoice(optionIndex) {
+            const scenario = scenarios[state.currentScene];
+            const option = scenario.options[optionIndex];
+            
             state.score = Math.min(100, state.score + option.points);
             state.clientTrust = Math.max(0, Math.min(100, state.clientTrust + option.trustChange));
             state.clientInterest = Math.max(0, Math.min(100, state.clientInterest + option.interestChange));
@@ -279,6 +282,9 @@
             state.currentScene = option.next;
             render();
         }
+        
+        window.handleChoice = handleChoice;
+        window.resetGame = resetGame;
 
         function resetGame() {
             state = {
@@ -336,7 +342,7 @@
                     <div class="space-y-3">
                         <p class="text-sm font-semibold text-gray-600 mb-4">Оберіть вашу відповідь:</p>
                         ${scenario.options.map((option, i) => `
-                            <button onclick='handleChoice(${JSON.stringify(option).replace(/'/g, "\\'")})'  class="w-full text-left p-4 bg-gradient-to-r from-purple-50 to-pink-50 hover:from-purple-100 hover:to-pink-100 rounded-xl border-2 border-transparent hover:border-purple-300 transition-all">
+                            <button onclick="handleChoice(${i})" class="w-full text-left p-4 bg-gradient-to-r from-purple-50 to-pink-50 hover:from-purple-100 hover:to-pink-100 rounded-xl border-2 border-transparent hover:border-purple-300 transition-all">
                                 <div class="flex gap-3">
                                     <div class="w-8 h-8 bg-purple-200 rounded-full flex items-center justify-center font-bold text-purple-700">${i + 1}</div>
                                     <p class="text-gray-700 flex-1">${option.text}</p>
